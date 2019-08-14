@@ -512,7 +512,7 @@ def train(hparams):
     elif FLAGS.task_name == "svhn":
       eval_size = 26032
     else:
-      raise ValueError, "You need to specify the size of your test set."
+      raise(ValueError, "You need to specify the size of your test set.")
     eval_steps = eval_size // FLAGS.eval_batch_size
 
   ##### Get model function
