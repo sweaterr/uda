@@ -240,18 +240,15 @@ def build_model(inputs, num_classes, is_training, update_bn, hparams):
     The logits of the image model.
   """
   scopes = setup_arg_scopes(is_training)
-
   from contextlib import ExitStack, contextmanager
-  def nested(*contexts):
-    """
-    Reimplementation of nested in python 3.
-    """
-    with ExitStack() as stack:
-      for ctx in contexts:
-        stack.enter_context(ctx)
-      yield contexts
 
-  with nested(*scopes):
+  @contextmanager
+  def settings(*args, **kwargs):
+    # ... populate `managers`
+    with ExitStack() as stack:
+      yield tuple(stack.enter_context(cm) for cm in managers)
+  # with contextlib.nested(*scopes):
+  with settings(*scopes):
     if hparams.model_name == "pyramid_net":
       logits = build_shake_drop_model(
           inputs, num_classes, is_training)
