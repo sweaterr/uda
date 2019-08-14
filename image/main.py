@@ -245,6 +245,7 @@ def build_model(inputs, num_classes, is_training, update_bn, hparams):
   @contextmanager
   def settings(*args, **kwargs):
     # ... populate `managers`
+    managers = list(args)
     with ExitStack() as stack:
       yield tuple(stack.enter_context(cm) for cm in managers)
   # with contextlib.nested(*scopes):
