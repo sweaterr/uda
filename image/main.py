@@ -21,20 +21,13 @@ from __future__ import print_function
 
 import contextlib
 
-try:
-    from contextlib import nested  # Python 2
-except ImportError:
-    from contextlib import ExitStack, contextmanager
-
-    @contextmanager
-    def nested(*contexts):
-        """
-        Reimplementation of nested in python 3.
-        """
-        with ExitStack() as stack:
-            for ctx in contexts:
-                stack.enter_context(ctx)
-            yield contexts
+# try:
+#     from contextlib import nested  # Python 2
+# except ImportError:
+#     from contextlib import ExitStack, contextmanager
+#
+#     @contextmanager
+#
 
 import os
 import time
@@ -247,7 +240,18 @@ def build_model(inputs, num_classes, is_training, update_bn, hparams):
     The logits of the image model.
   """
   scopes = setup_arg_scopes(is_training)
-  with contextlib.nested(*scopes):
+
+  from contextlib import ExitStack, contextmanager
+  def nested(*contexts):
+    """
+    Reimplementation of nested in python 3.
+    """
+    with ExitStack() as stack:
+      for ctx in contexts:
+        stack.enter_context(ctx)
+      yield contexts
+
+  with nested(*scopes):
     if hparams.model_name == "pyramid_net":
       logits = build_shake_drop_model(
           inputs, num_classes, is_training)
