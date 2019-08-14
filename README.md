@@ -155,11 +155,11 @@ AUG_COPY=100
 bash scripts/download_cifar10.sh ${AUG_COPY}
 ```
 
-Note that you need 230G disk space for all the augmented data. To save space,
+Note that you need 120G disk space for all the augmented data. To save space,
 you can set AUG_COPY to a smaller number. For example, setting *aug_copy* to 30
 and 10 will leads to an accuracy of 94.30 and 93.64 respectively on CIFAR-10.
 
-Alternatively, you can generate the augmented examples by running
+Alternatively, you can generate the augmented examples yourself by running
 
 ```shell
 AUG_COPY=100
@@ -170,7 +170,8 @@ bash scripts/preprocess.sh --aug_copy=${AUG_COPY}
 
 We provide different commands to train UDA on TPUs and GPUs since TPUs and GPUs
 have different implementations for batch norm. All of the scripts can achieve
-the current SOTA results on CIFAR-10 and SVHN.
+the current SOTA results on CIFAR-10 with 4,000 examples and SVHN with 1,000
+examples.
 
 GPU command:
 
@@ -199,12 +200,8 @@ Google Cloud TPU v3-32/v3-32 Pod command:
 
 ```shell
 # UDA accuracy: 97.1% - 97.8%
-bash scripts/run_cifar10_tpu_32_core.sh --aug_copy=${AUG_COPY}
+bash scripts/run_svhn_tpu_32_core.sh --aug_copy=${AUG_COPY}
 ```
-
-Our hyperparameters for SVHN are basically the same as CIFAR-10. To use GPUs or
-Cloud TPU v2/v3, you can take the script for CIFAR-10 and change *task_name* to
-svhn, change *sup_size* to 1000 and set *learning_rate* to 0.03 or 0.05.
 
 ## General guidelines for setting hyperparameters:
 
@@ -213,8 +210,8 @@ to really push the performance, here are suggestions about hyperparamters:
 
 *   It works well to set the weight on unsupervised objective *'unsup_coeff'*
     to 1.
-*   Use a lower learning rate than pure supervised learning because the
-    supervised loss term and the unsupervised loss term are added.
+*   Use a lower learning rate than pure supervised learning because there are
+    two loss terms computed on labeled data and unlabeled data respecitively.
 *   If your have an extremely small amount of data, try to tweak
     'uda_softmax_temp' and 'uda_confidence_thresh' a bit. For more details about
     these two hyperparameters, search the "Confidence-based masking" and
@@ -222,7 +219,7 @@ to really push the performance, here are suggestions about hyperparamters:
 *   Effective augmentation for supervised learning usually works well for UDA.
 *   Enumerating the TSA schedules (including not using TSA) is helpful.
 *   For some tasks, we observed that increasing the batch size for the
-    unsupervised objective leads to better performance. In some cases, small
+    unsupervised objective leads to better performance. For other tasks, small
     batch sizes also work well. For example, when we run UDA with GPU on
     CIFAR-10, the best batch size for the unsupervised objective is 160.
 
@@ -239,7 +236,7 @@ Please cite this paper if you use UDA.
 
 ```
 @article{xie2019unsupervised,
-  title={Unsupervised data augmentation},
+  title={Unsupervised Data Augmentation for Consistency Training},
   author={Xie, Qizhe and Dai, Zihang and Hovy, Eduard and Luong, Minh-Thang and Le, Quoc V},
   journal={arXiv preprint arXiv:1904.12848},
   year={2019}

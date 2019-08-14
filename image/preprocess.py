@@ -104,7 +104,6 @@ def save_tfrecord(example_list, out_path, max_shard_size=4096):
   shard_size = 0
   record_writer = obtain_tfrecord_writer(out_path, shard_cnt)
   for example in example_list:
-    record_writer.write(example.SerializeToString())
     if shard_size >= max_shard_size:
       record_writer.close()
       shard_cnt += 1
@@ -208,6 +207,7 @@ def get_data_by_size_lim(images, labels, sup_size):
       chosen_images = images[:sup_size]
       chosen_labels = labels[:sup_size]
     else:
+      np.random.seed(0)
       perm = np.arange(images.shape[0])
       np.random.shuffle(perm)
       chosen_images = images[perm][:sup_size]

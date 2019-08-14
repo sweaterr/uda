@@ -29,7 +29,7 @@ a separate line
 input_file=example_file.txt
 
 '''
-sampling_temp: The sampling temperature for translation. See README.md for more 
+sampling_temp: The sampling temperature for translation. See README.md for more
 details.
 '''
 sampling_temp=0.8
@@ -44,17 +44,17 @@ backward_gen_dir=${data_dir}/backward_gen
 para_dir=${data_dir}/paraphrase
 
 mkdir -p ${data_dir}
+mkdir -p ${forward_src_dir}
 mkdir -p ${forward_gen_dir}
 mkdir -p ${backward_gen_dir}
 mkdir -p ${doc_len_dir}
 mkdir -p ${para_dir}
 
-
 echo "*** spliting paragraph ***"
-# install nltk 
+# install nltk
 python split_paragraphs.py \
   --input_file=${input_file} \
-  --output_file=${forward_src_dir}/file_${worker_id}_of_${replicas}.txt
+  --output_file=${forward_src_dir}/file_${worker_id}_of_${replicas}.txt \
   --doc_len_file=${doc_len_dir}/doc_len_${worker_id}_of_${replicas}.json \
   --replicas=${replicas} \
   --worker_id=${worker_id} \

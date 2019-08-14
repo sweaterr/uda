@@ -14,11 +14,11 @@
 # limitations under the License.
 #!/bin/bash
 task_name=svhn
-mkdir -p proc_data/${task_name}
-cd proc_data/${task_name}
+mkdir -p data/proc_data/${task_name}
+cd data/proc_data/${task_name}
 aug_copy=$1
 
-url_prefix=https://storage.googleapis.com/uda_model/image/proc_data/${task_name}
+url_prefix=https://storage.googleapis.com/uda_model/image/proc_data_v1.1/${task_name}
 
 wget $url_prefix/train-size_1000.tfrecord.0
 
